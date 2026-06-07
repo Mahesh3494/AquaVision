@@ -1,8 +1,8 @@
 import streamlit as st
 import numpy as np
 from PIL import Image
-from tf_keras.models import load_model
-from tf_keras.applications.efficientnet import preprocess_input
+from tensorflow.keras.models import load_model
+from tensorflow.keras.applications.efficientnet import preprocess_input
 
 # ================================
 # CONFIGURATION
