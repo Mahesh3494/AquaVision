@@ -1,13 +1,12 @@
 import streamlit as st
 import numpy as np
 from PIL import Image
-from tensorflow.keras.models import load_model
-from tensorflow.keras.applications.efficientnet import preprocess_input
+import onnxruntime as ort
 
 # ================================
 # CONFIGURATION
 # ================================
-MODEL_PATH = "best_model.h5"
+MODEL_PATH = "shrimp_model.onnx"
 IMG_SIZE = 224
 
 CLASS_NAMES = ['BG', 'Healthy', 'WSSV', 'WSSV_BG']
@@ -44,23 +43,25 @@ DISEASE_INFO = {
 # ================================
 @st.cache_resource
 def load_disease_model():
-    model = load_model(MODEL_PATH)
-    return model
+    session = ort.InferenceSession(MODEL_PATH)
+    return session
 
-# ================================
-# PREDICT FUNCTION
-# ================================
-def predict(image, model):
+def preprocess(image):
     image = image.convert('RGB')
     img = image.resize((IMG_SIZE, IMG_SIZE))
     img_array = np.array(img, dtype=np.float32)
+    # EfficientNet preprocessing
+    img_array = (img_array - [103.939, 116.779, 123.68])
+    img_array = img_array[..., ::-1]  # RGB to BGR
     img_array = np.expand_dims(img_array, axis=0)
-    img_array = preprocess_input(img_array)
+    return img_array
 
-    predictions = model(img_array, training=False).numpy()
+def predict(image, session):
+    img_array = preprocess(image)
+    input_name = session.get_inputs()[0].name
+    predictions = session.run(None, {input_name: img_array})[0]
     predicted_class = CLASS_NAMES[np.argmax(predictions)]
     confidence = float(np.max(predictions)) * 100
-
     return predicted_class, confidence, predictions[0]
 
 # ================================
