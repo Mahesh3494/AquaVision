@@ -32,3 +32,4 @@ Farmer uploads a photo of their shrimp → app returns:
 
 ## Built By
 Mahesh Penubothu — VIT-AP University CSE
+Family background in shrimp aquaculture farming, Andhra Pradesh
