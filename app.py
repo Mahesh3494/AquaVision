@@ -50,9 +50,10 @@ def preprocess(image):
     image = image.convert('RGB')
     img = image.resize((IMG_SIZE, IMG_SIZE))
     img_array = np.array(img, dtype=np.float32)
-    # EfficientNet preprocessing
-    img_array = (img_array - [103.939, 116.779, 123.68])
+    # EfficientNet preprocessing — same as training
+    mean = np.array([103.939, 116.779, 123.68], dtype=np.float32)
     img_array = img_array[..., ::-1]  # RGB to BGR
+    img_array = img_array - mean
     img_array = np.expand_dims(img_array, axis=0)
     return img_array
 
