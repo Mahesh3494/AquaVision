@@ -6,7 +6,8 @@ import onnxruntime as ort
 # ================================
 # CONFIGURATION
 # ================================
-IMG_SIZE = 224
+SHRIMP_IMG_SIZE = 224
+FISH_IMG_SIZE = 300
 
 SHRIMP_CLASSES = ['BG', 'Healthy', 'WSSV', 'WSSV_BG']
 FISH_CLASSES = [
@@ -107,14 +108,14 @@ def load_shrimp_model():
 
 @st.cache_resource
 def load_fish_model():
-    return ort.InferenceSession("fish_model.onnx")
+    return ort.InferenceSession("fish_model_b3.onnx")
 
 # ================================
 # PREPROCESS
 # ================================
-def preprocess(image):
+def preprocess(image, img_size):
     image = image.convert('RGB')
-    img = image.resize((IMG_SIZE, IMG_SIZE))
+    img = image.resize((img_size, img_size))
     img_array = np.array(img, dtype=np.float32)
     mean = np.array([103.939, 116.779, 123.68], dtype=np.float32)
     img_array = img_array[..., ::-1]
@@ -125,8 +126,8 @@ def preprocess(image):
 # ================================
 # PREDICT
 # ================================
-def predict(image, session, class_names):
-    img_array = preprocess(image)
+def predict(image, session, class_names, img_size):
+    img_array = preprocess(image, img_size)
     input_name = session.get_inputs()[0].name
     predictions = session.run(None, {input_name: img_array})[0]
     predicted_class = class_names[np.argmax(predictions)]
@@ -166,11 +167,13 @@ if is_shrimp:
     class_names = SHRIMP_CLASSES
     disease_info = SHRIMP_INFO
     upload_label = "Upload Shrimp Image"
+    img_size = SHRIMP_IMG_SIZE
 else:
     session = load_fish_model()
     class_names = FISH_CLASSES
     disease_info = FISH_INFO
     upload_label = "Upload Fish Image"
+    img_size = FISH_IMG_SIZE
 
 # ================================
 # UPLOAD
@@ -190,7 +193,7 @@ if uploaded_file is not None:
 
     with col2:
         with st.spinner("Analyzing..."):
-            predicted_class, confidence, all_probs = predict(image, session, class_names)
+            predicted_class, confidence, all_probs = predict(image, session, class_names, img_size)
 
         info = disease_info[predicted_class]
 
