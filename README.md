@@ -33,3 +33,8 @@ Farmer uploads a photo of their shrimp → app returns:
 ## Built By
 Mahesh Penubothu — VIT-AP University CSE
 Family background in shrimp aquaculture farming, Andhra Pradesh
+
+## Known Limitations
+Model performs best on clear, isolated shrimp photos with plain backgrounds.
+Real farm photos with complex backgrounds may show lower confidence scores.
+Future versions will include farm-collected training data for improved accuracy.
