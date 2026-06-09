@@ -2,6 +2,7 @@ import streamlit as st
 import numpy as np
 from PIL import Image
 import onnxruntime as ort
+import matplotlib.pyplot as plt
 
 # ================================
 # CONFIGURATION
@@ -168,12 +169,32 @@ if is_shrimp:
     disease_info = SHRIMP_INFO
     upload_label = "Upload Shrimp Image"
     img_size = SHRIMP_IMG_SIZE
+    model_arch = "EfficientNetB0"
+    num_classes = 4
+    val_accuracy = "85%"
+    dataset_size = "2000"
 else:
     session = load_fish_model()
     class_names = FISH_CLASSES
     disease_info = FISH_INFO
     upload_label = "Upload Fish Image"
     img_size = FISH_IMG_SIZE
+    model_arch = "EfficientNetB3"
+    num_classes = 8
+    val_accuracy = "83.46%"
+    dataset_size = "2000"
+
+# ================================
+# MODEL INFO
+# ================================
+with st.expander("ℹ️ Model Information"):
+    col1, col2 = st.columns(2)
+    with col1:
+        st.write(f"**Architecture:** {model_arch}")
+        st.write(f"**Classes:** {num_classes}")
+    with col2:
+        st.write(f"**Validation Accuracy:** {val_accuracy}")
+        st.write(f"**Dataset Size:** {dataset_size} images")
 
 # ================================
 # UPLOAD
@@ -197,6 +218,10 @@ if uploaded_file is not None:
 
         info = disease_info[predicted_class]
 
+        # Low confidence warning
+        if confidence < 60:
+            st.warning("⚠️ Low Confidence Prediction — Model is uncertain. Please upload a clearer image or inspect manually.")
+
         st.markdown(f"### {info['status']}")
         st.metric("Confidence", f"{confidence:.1f}%")
         st.progress(confidence / 100)
@@ -209,6 +234,16 @@ if uploaded_file is not None:
         else:
             st.error(f"Severity: {severity}")
 
+        # Reliability badge
+        if confidence >= 95:
+            st.success("Reliability: Very High")
+        elif confidence >= 80:
+            st.info("Reliability: High")
+        elif confidence >= 60:
+            st.warning("Reliability: Medium")
+        else:
+            st.error("Reliability: Low")
+
     st.markdown("---")
     st.markdown("### What This Means")
     st.write(info['description'])
@@ -216,11 +251,31 @@ if uploaded_file is not None:
     st.markdown("### Recommended Action")
     st.info(info['recommendation'])
 
-    st.markdown("### Detection Breakdown")
-    for i, class_name in enumerate(class_names):
-        prob = float(all_probs[i]) * 100
-        st.write(f"{class_name}: {prob:.1f}%")
+    # Top 3 predictions
+    st.markdown("### Top 3 Predictions")
+    top3_indices = np.argsort(all_probs)[::-1][:3]
+    for i, idx in enumerate(top3_indices):
+        prob = float(all_probs[idx]) * 100
+        st.write(f"**{i+1}. {class_names[idx]}** — {prob:.1f}%")
         st.progress(prob / 100)
 
+    # Probability chart
+    st.markdown("### Detection Breakdown")
+    sorted_indices = np.argsort(all_probs)[::-1]
+    sorted_classes = [class_names[i] for i in sorted_indices]
+    sorted_probs = [float(all_probs[i]) * 100 for i in sorted_indices]
+
+    fig, ax = plt.subplots(figsize=(8, 4))
+    bars = ax.barh(sorted_classes[::-1], sorted_probs[::-1], color='steelblue')
+    ax.set_xlabel('Confidence (%)')
+    ax.set_xlim(0, 100)
+    for bar, prob in zip(bars, sorted_probs[::-1]):
+        ax.text(bar.get_width() + 1, bar.get_y() + bar.get_height()/2,
+                f'{prob:.1f}%', va='center', fontsize=9)
+    plt.tight_layout()
+    st.pyplot(fig)
+    plt.close()
+
     st.markdown("---")
+    st.caption("⚕️ Disclaimer: This tool is intended for preliminary screening only and should not replace professional veterinary diagnosis.")
     st.caption("AquaVision — Built for aquaculture farmers | VIT-AP University")
