@@ -118,9 +118,9 @@ def preprocess(image, img_size):
     image = image.convert('RGB')
     img = image.resize((img_size, img_size))
     img_array = np.array(img, dtype=np.float32)
-    mean = np.array([103.939, 116.779, 123.68], dtype=np.float32)
-    img_array = img_array[..., ::-1]
-    img_array = img_array - mean
+    # EfficientNet preprocess_input equivalent
+    # Scales to -1 to 1 range
+    img_array = img_array / 127.5 - 1.0
     img_array = np.expand_dims(img_array, axis=0)
     return img_array
 
