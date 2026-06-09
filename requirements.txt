@@ -2,3 +2,4 @@ streamlit
 onnxruntime
 numpy
 pillow
+matplotlib
