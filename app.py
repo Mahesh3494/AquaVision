@@ -138,22 +138,66 @@ def predict(image, session, class_names, img_size):
 st.set_page_config(
     page_title="AquaVision — Disease Detection",
     page_icon="🐟",
-    layout="centered"
+    layout="wide"
 )
+
+st.markdown("""
+<style>
+.stApp {
+    background: #0B1120;
+}
+
+.block-container {
+    max-width: 1100px;
+    padding-top: 2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+h1, h2, h3, p, label {
+    color: #F8FAFC;
+}
+
+div[data-testid="stFileUploader"] {
+    border: 2px dashed #06B6D4;
+    border-radius: 16px;
+    padding: 1rem;
+    background: #111827;
+}
+
+div[data-testid="metric-container"] {
+    background: #111827;
+    border: 1px solid #1F2937;
+    padding: 1rem;
+    border-radius: 14px;
+}
+
+section[data-testid="stSidebar"] {
+    background: #111827;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # ================================
 # HEADER
 # ================================
-st.title("🐟 AquaVision")
-st.subheader("Aquaculture Disease Detection Tool")
-st.write("Upload a photo of your shrimp or fish to detect diseases instantly.")
-st.markdown("---")
+st.markdown("""
+<div style='text-align:center;padding:20px'>
+<h1>🐟 AquaVision</h1>
+<h3>AI-Powered Aquaculture Disease Detection</h3>
+<p>
+Detect fish and shrimp diseases in seconds using deep learning models.
+</p>
+</div>
+""", unsafe_allow_html=True)
 
 # ================================
 # SPECIES TOGGLE
 # ================================
+st.markdown("### Select Species")
+
 species = st.radio(
-    "Select species:",
+    "",
     ["🦐 Shrimp", "🐟 Fish"],
     horizontal=True
 )
@@ -184,28 +228,46 @@ else:
 # ================================
 # MODEL INFO
 # ================================
-with st.expander("ℹ️ Model Information"):
-    col1, col2 = st.columns(2)
-    with col1:
-        st.write(f"**Architecture:** {model_arch}")
-        st.write(f"**Classes:** {num_classes}")
-    with col2:
-        st.write(f"**Validation Accuracy:** {val_accuracy}")
-        st.write(f"**Dataset Size:** {dataset_size} images")
+with st.sidebar:
+    st.markdown("## 🧠 Model Info")
+
+    st.markdown(f"""
+    **Architecture:** {model_arch}
+
+    **Classes:** {num_classes}
+
+    **Validation Accuracy:** {val_accuracy}
+
+    **Dataset Size:** {dataset_size} images
+    """)
+
+    st.markdown("---")
+
+    st.markdown("""
+    ### 🌊 AquaVision
+
+    AI-powered disease screening for
+    fish and shrimp farming.
+    """)
 
 # ================================
 # UPLOAD
 # ================================
+st.markdown("## 📷 Upload Image")
+
+st.caption(
+    "Upload a clear image of a fish or shrimp for disease detection."
+)
+
 uploaded_file = st.file_uploader(
-    upload_label,
-    type=['jpg', 'jpeg', 'png', 'webp'],
-    help="Take a clear photo and upload it here"
+    "",
+    type=['jpg', 'jpeg', 'png', 'webp']
 )
 
 if uploaded_file is not None:
     image = Image.open(uploaded_file)
 
-    col1, col2 = st.columns([1, 1])
+    col1, col2 = st.columns([1.1, 0.9])
     with col1:
         st.image(image, caption="Uploaded Image", use_container_width=True)
 
@@ -219,8 +281,22 @@ if uploaded_file is not None:
         if confidence < 60:
             st.warning("⚠️ Low Confidence Prediction — Model is uncertain. Please upload a clearer image or inspect manually.")
 
-        st.markdown(f"### {info['status']}")
-        st.metric("Confidence", f"{confidence:.1f}%")
+        st.markdown(f"## {info['status']}")
+
+        c1, c2 = st.columns(2)
+
+        with c1:
+            st.metric(
+                "Confidence",
+                f"{confidence:.1f}%"
+            )
+
+        with c2:
+            st.metric(
+                "Disease",
+                predicted_class
+            )
+
         st.progress(confidence / 100)
 
         severity = info['severity']
@@ -242,14 +318,14 @@ if uploaded_file is not None:
             st.error("Reliability: Low")
 
     st.markdown("---")
-    st.markdown("### What This Means")
+    st.markdown("### 🔬 Disease Information")
     st.write(info['description'])
 
-    st.markdown("### Recommended Action")
+    st.markdown("### 🚑 Recommended Action")
     st.info(info['recommendation'])
 
     # Top 3 predictions
-    st.markdown("### Top 3 Predictions")
+    st.markdown("### 🎯 Top Predictions")
     top3_indices = np.argsort(all_probs)[::-1][:3]
     for i, idx in enumerate(top3_indices):
         prob = float(all_probs[idx]) * 100
@@ -257,7 +333,7 @@ if uploaded_file is not None:
         st.progress(prob / 100)
 
     # Probability chart
-    st.markdown("### Detection Breakdown")
+    st.markdown("### 📊 Detection Breakdown")
     sorted_indices = np.argsort(all_probs)[::-1]
     sorted_classes = [class_names[i] for i in sorted_indices]
     sorted_probs = [float(all_probs[i]) * 100 for i in sorted_indices]
