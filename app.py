@@ -180,25 +180,52 @@ section[data-testid="stSidebar"] hr {
 
 /* Header */
 .av-header {
-    background: linear-gradient(135deg, #1A202C 0%, #2D3748 100%);
+    background: #FFFFFF;
     border-radius: 16px;
     padding: 28px 32px;
     margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    border-bottom: 3px solid #3182CE;
+}
+.av-header-top {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 14px;
+    margin-bottom: 20px;
 }
 .av-header-text h1 {
-    color: #FFFFFF;
+    color: #1A202C;
     font-size: 2rem;
     font-weight: 800;
     margin: 0;
     letter-spacing: -0.5px;
 }
 .av-header-text p {
-    color: #90CDF4;
-    font-size: 0.95rem;
-    margin: 4px 0 0 0;
+    color: #718096;
+    font-size: 0.9rem;
+    margin: 3px 0 0 0;
+}
+.av-hero-stats {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding-top: 16px;
+    border-top: 1px solid #EDF2F7;
+}
+.av-hero-stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #4A5568;
+}
+.av-hero-stat-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #38A169;
+    flex-shrink: 0;
 }
 
 /* Stats row */
@@ -255,7 +282,7 @@ div[data-testid="stRadio"] > div > label {
     justify-content: center !important;
     padding: 14px 32px !important;
     border-radius: 50px !important;
-    border: 2px solid #E2E8F0 !important;
+    border: 2px solid #CBD5E0 !important;
     background: #FFFFFF !important;
     cursor: pointer !important;
     font-size: 1.1rem !important;
@@ -554,12 +581,21 @@ div[data-testid="stRadio"] label {
 # ================================
 # HEADER
 # ================================
-st.markdown("""
+st.markdown(f"""
 <div class="av-header">
-    <div style="font-size:2.8rem;line-height:1">🐟</div>
-    <div class="av-header-text">
-        <h1>AquaVision</h1>
-        <p>AI-powered disease detection for aquaculture farmers · VIT-AP University</p>
+    <div class="av-header-top">
+        <div style="font-size:2.6rem;line-height:1">🐟</div>
+        <div class="av-header-text">
+            <h1>AquaVision</h1>
+            <p>AI-powered disease detection for aquaculture farmers · VIT-AP University</p>
+        </div>
+    </div>
+    <div class="av-hero-stats">
+        <div class="av-hero-stat"><div class="av-hero-stat-dot"></div>85% Shrimp Model Accuracy</div>
+        <div class="av-hero-stat"><div class="av-hero-stat-dot"></div>82% Fish Model Accuracy</div>
+        <div class="av-hero-stat"><div class="av-hero-stat-dot" style="background:#3182CE"></div>12 Disease Classes</div>
+        <div class="av-hero-stat"><div class="av-hero-stat-dot" style="background:#3182CE"></div>4,000+ Training Images</div>
+        <div class="av-hero-stat"><div class="av-hero-stat-dot" style="background:#805AD5"></div>Fish + Shrimp Detection</div>
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -815,8 +851,15 @@ if uploaded_file is not None:
     # ================================
     st.markdown("""
 <div class="av-disclaimer">
-    ⚕️ <strong>Disclaimer:</strong> This tool is for preliminary screening only and should not replace professional veterinary diagnosis.
-    Always consult a qualified aquaculture specialist for treatment decisions.<br>
-    <span style="margin-top:4px;display:block">AquaVision · Built for aquaculture farmers · VIT-AP University</span>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="font-size:1.1rem">🐟</span>
+        <span style="font-weight:800;font-size:1rem;color:#2D3748">AquaVision</span>
+        <span style="color:#CBD5E0;font-size:0.8rem">· AI-Powered Aquaculture Disease Detection</span>
+    </div>
+    <div style="color:#718096;font-size:0.82rem;line-height:1.6">
+        ⚕️ <strong>Disclaimer:</strong> For preliminary screening only. Not a substitute for professional veterinary diagnosis.
+        Always consult a qualified aquaculture specialist for treatment decisions.<br>
+        Built by <strong>Mahesh Penubothu</strong> · VIT-AP University · For research and educational purposes.
+    </div>
 </div>
 """, unsafe_allow_html=True)
