@@ -145,11 +145,16 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-html, body, .stApp {
-    font-family: 'Inter', sans-serif;
-    background-color: #F0F4F8;
-    color: #1A202C;
+:root { color-scheme: light only !important; }
+
+html, body, .stApp, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
+    font-family: 'Inter', sans-serif !important;
+    background-color: #F0F4F8 !important;
+    color: #1A202C !important;
 }
+
+/* Force light mode everywhere */
+* { color-scheme: light only; }
 
 .block-container {
     max-width: 1000px;
@@ -233,6 +238,63 @@ section[data-testid="stSidebar"] hr {
     padding: 16px 20px;
     margin-bottom: 20px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+/* Hide the default radio and make big pill buttons */
+div[data-testid="stRadio"] > label {
+    display: none !important;
+}
+div[data-testid="stRadio"] > div {
+    display: flex !important;
+    gap: 12px !important;
+    flex-direction: row !important;
+}
+div[data-testid="stRadio"] > div > label {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 14px 32px !important;
+    border-radius: 50px !important;
+    border: 2px solid #E2E8F0 !important;
+    background: #F7FAFC !important;
+    cursor: pointer !important;
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    color: #4A5568 !important;
+    transition: all 0.15s !important;
+    min-width: 130px !important;
+}
+div[data-testid="stRadio"] > div > label:hover {
+    border-color: #3182CE !important;
+    color: #3182CE !important;
+    background: #EBF8FF !important;
+}
+div[data-testid="stRadio"] > div > label[data-checked="true"],
+div[data-testid="stRadio"] > div > label:has(input:checked) {
+    background: #1A202C !important;
+    border-color: #1A202C !important;
+    color: #FFFFFF !important;
+}
+div[data-testid="stRadio"] > div > label > div:first-child {
+    display: none !important;
+}
+div[data-testid="stRadio"] > div > label p {
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    margin: 0 !important;
+}
+
+/* Upload button text fix */
+div[data-testid="stFileUploader"] button {
+    color: #1A202C !important;
+    background: #FFFFFF !important;
+    border: 1px solid #CBD5E0 !important;
+    font-weight: 600 !important;
+}
+div[data-testid="stFileUploader"] small,
+div[data-testid="stFileUploader"] span,
+div[data-testid="stFileUploader"] p {
+    color: #4A5568 !important;
 }
 
 /* Upload area */
@@ -505,8 +567,11 @@ st.markdown("""
 # ================================
 # SPECIES TOGGLE
 # ================================
-st.markdown('<div class="av-species-row">', unsafe_allow_html=True)
-species = st.radio("**Select Species**", ["🦐 Shrimp", "🐟 Fish"], horizontal=True)
+st.markdown("""
+<div class="av-species-row">
+    <div style="font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#718096;margin-bottom:12px">Select Species</div>
+""", unsafe_allow_html=True)
+species = st.radio("", ["🦐 Shrimp", "🐟 Fish"], horizontal=True, label_visibility="collapsed")
 st.markdown('</div>', unsafe_allow_html=True)
 
 is_shrimp = species == "🦐 Shrimp"
