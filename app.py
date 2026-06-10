@@ -309,6 +309,7 @@ div[data-testid="stRadio"] > div > label p {
     font-size: 1.1rem !important;
     font-weight: 700 !important;
     margin: 0 !important;
+    color: #1A202C !important;
 }
 
 /* Upload button text fix */
