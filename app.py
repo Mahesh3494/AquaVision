@@ -567,6 +567,10 @@ div[data-testid="stRadio"] label {
     font-weight: 600 !important;
     color: #2D3748 !important;
 }
+            
+div[data-testid="stRadio"] > div > label:has(input:checked) p {
+    color: #FFFFFF !important;
+}            
 
 /* Plotly chart container */
 .av-chart-wrap {
@@ -864,3 +868,6 @@ if uploaded_file is not None:
     </div>
 </div>
 """, unsafe_allow_html=True)
+
+
+
