@@ -256,11 +256,11 @@ div[data-testid="stRadio"] > div > label {
     padding: 14px 32px !important;
     border-radius: 50px !important;
     border: 2px solid #E2E8F0 !important;
-    background: #F7FAFC !important;
+    background: #FFFFFF !important;
     cursor: pointer !important;
     font-size: 1.1rem !important;
     font-weight: 700 !important;
-    color: #4A5568 !important;
+    color: #1A202C !important;
     transition: all 0.15s !important;
     min-width: 130px !important;
 }
@@ -629,8 +629,7 @@ with st.sidebar:
     st.markdown("### About")
     st.markdown("""
 Built by **Mahesh Penubothu**  
-VIT-AP University, CSE  
-Family background in shrimp aquaculture farming, Andhra Pradesh.
+VIT-AP University, CSE
 
 ---
 
