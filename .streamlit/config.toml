@@ -5,5 +5,8 @@ backgroundColor = "#0a1418"
 secondaryBackgroundColor = "#0f1e22"
 textColor = "#f4efe4"
 
+[server]
+enableStaticServing = true
+
 [client]
 toolbarMode = "minimal"

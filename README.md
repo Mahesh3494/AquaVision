@@ -78,8 +78,18 @@ Red/yellow areas show where the model focused to make each prediction. This conf
 | Models | EfficientNetB0 / EfficientNetB3 |
 | Export | ONNX (no TensorFlow at inference) |
 | Training | Google Colab T4 GPU |
-| App | Streamlit |
+| App | Streamlit, with the interface as one custom component (`st.components.v2`) |
 | Deployment | Streamlit Cloud |
+
+### Interface
+
+The UI shares AquaManage's palette, type and severity bands, so it can move into the AquaManage site later.
+
+- `ui/aquavision.css`, `ui/aquavision.js`: the whole interface (species plates, upload, report). `app.py` passes it config and results and runs the models.
+- `static/`: images served by Streamlit's static file serving (`.streamlit/config.toml` turns it on). It holds the specimen photos on the plates, the sample photos and the Grad-CAM image.
+- Photos are resized in the browser to 1600 px before upload, so checks stay fast on mobile data.
+
+Shrimp photo on the shrimp plate: [Chan T. Y. & Lin C. W. (MNHN)](https://commons.wikimedia.org/wiki/File:Fenneropenaeus_indicus_(MNHN-IU-2011-5728).jpeg), CC BY 4.0. Tilapia photo on the fish plate: [Germano Roberto Schüür](https://commons.wikimedia.org/wiki/File:Til%C3%A1pia_ou_Sarotherodon_niloticus.jpg), CC BY-SA 4.0. The sample photos come from the training datasets.
 
 ---
 
