@@ -1,0 +1,37 @@
+[project]
+name = "aquavision"
+version = "0.1.0"
+description = "Shrimp and fish disease check from a photo: ONNX models behind a FastAPI service and a Streamlit demo."
+requires-python = ">=3.11"
+# What the API needs to run (and all the Docker image will install).
+dependencies = [
+    "fastapi[standard]>=0.120",
+    "numpy>=2.0",
+    "onnxruntime>=1.20",
+    "pillow>=11.0",
+]
+
+[dependency-groups]
+dev = ["pytest>=8.4", "ruff>=0.14"]
+# The Streamlit demo (aquavision-detect.streamlit.app). Not needed by the API.
+ui = ["streamlit>=1.58"]
+
+[tool.uv]
+# A plain `uv sync` on the laptop installs everything; the Docker image will skip these.
+default-groups = ["dev", "ui"]
+
+[tool.ruff]
+line-length = 100
+# Old training scripts and the Streamlit app are left as they are for now.
+extend-exclude = ["train.py", "explore.py", "convert_to_onnx.py", "app.py"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.ruff.lint.isort]
+# Our own modules sit at the repo root, so Ruff can't tell they're ours.
+known-first-party = ["inference", "api"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
