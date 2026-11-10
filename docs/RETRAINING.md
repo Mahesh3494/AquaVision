@@ -14,6 +14,12 @@ in both training and validation, the validation score goes up but nothing new wa
 would explain an 85% validation score next to bad results on real photos. **First check when
 retraining:** split train/validation by *original photo*, never by augmented copy.
 
+**Found 2026-11-10, testing on a phone:** a screenshot of the AquaManage login page (no shrimp
+at all) came back **Black gill, 99%**. The model has only 4 classes, so it must pick one of them
+for *any* picture, often very confidently. Margin can't catch this either. When retraining, add a
+way to say "this isn't a shrimp photo": a 5th class trained on non-shrimp pictures, or a separate
+out-of-distribution check before the disease model runs.
+
 ## What you have on this laptop (`C:\aquavision\data\`, gitignored, not on GitHub)
 | Folder | Contents |
 |---|---|
