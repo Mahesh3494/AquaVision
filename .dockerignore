@@ -1,0 +1,18 @@
+# Files Docker never sends into the build. Keeps the build fast and the image small:
+# the training data and .h5 files alone are over 200 MB.
+.git
+.venv
+__pycache__
+.pytest_cache
+.ruff_cache
+data
+*.h5
+*.png
+fish_model*.onnx
+static
+samples
+assets
+ui
+docs
+tests
+.env
